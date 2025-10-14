@@ -1,0 +1,29 @@
+{% extends "utils/base.html" %}
+{% block title %}Register{% endblock title %}
+
+{% block start %}
+<div class="container mx-auto col-6 shadow p-5 mt-5">
+  {% include "utils/alert.html" %}
+  <form method='post'>
+    {% csrf_token %}
+    <div class="form-group">
+      <input type="text" name='first_name' class="form-control mb-3" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="First name">
+      <input type="text" name='last_name' class="form-control mb-3" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Last name">
+      <input type="text" name="phone_number" class="form-control mb-3" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Phone number">
+      <input type="email" name="email" class="form-control mb-3" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="email">
+      <div class="form-group">
+
+        <input type="password" name='password' class="form-control" id="exampleInputPassword1" placeholder="Password">
+      </div>
+      <button type="submit" class="btn btn-primary mt-2">Submit</button>
+    </div>
+  </form>
+      <div class = "signup">
+        <p class = "float-right text-muted">Already have an account?
+        <i style="color: blue; cursor: pointer;" data-target="#exampleModal" data-toggle="modal">login now!</i>  
+        </p>
+      </div>
+      
+</div> 
+{% include "utils/login_modal.html" %}
+{% endblock start %}

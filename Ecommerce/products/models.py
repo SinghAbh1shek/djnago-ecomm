@@ -70,3 +70,4 @@ class VendorProducts(BaseModel):
             'product_name': self.product.item_name,
             'image': self.product.getFirstImage()
             }
+            

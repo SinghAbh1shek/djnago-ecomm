@@ -66,6 +66,9 @@ class VendorProducts(BaseModel):
     is_active = models.BooleanField(default=True)
     delivery_fee = models.FloatField(default=0)
 
+    def __str__(self):
+        return f"{self.shopkeeper.vendor_name} | {self.product} | {"Active" if self.is_active else "Unactive"}"
+
     def get_product_details(self):
         return {
             'product_name': self.product.item_name,

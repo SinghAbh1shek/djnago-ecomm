@@ -56,6 +56,7 @@ class ProductVariant(BaseModel):
 
 class ProductImages(BaseModel):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='product_images')
+    image = models.ImageField(upload_to='product/images/')
 
 class VendorProducts(BaseModel):
     shopkeeper = models.ForeignKey(Shopkeeper, on_delete=models.CASCADE)

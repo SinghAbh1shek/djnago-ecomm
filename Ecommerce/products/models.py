@@ -24,13 +24,13 @@ class BrandName(BaseModel):
 class Product(BaseModel):
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='product_category')
     sub_category = models.ForeignKey(SubCategory, on_delete=models.CASCADE, related_name='product_sub_category')
-    brand = models.ForeignKey(BrandName, on_delete=models.CASCADE)
+    brand = models.ForeignKey(BrandName, on_delete=models.CASCADE, related_name="product_brand")
     item_name = models.CharField(max_length=1000)
     product_descriptions = models.TextField()
     product_sku = models.CharField(max_length=100, unique=True)
     hsn_code = models.CharField(max_length=100)
     maximum_retail_price = models.FloatField()
-    parent_product = models.ForeignKey("Product", on_delete=models.CASCADE, related_name='variant_product', null=True, blank=True)
+    parent_product = models.ForeignKey("Product", on_delete=models.CASCADE, related_name='variant_products', null=True, blank=True)
 
     def __str__(self):
         return self.item_name
@@ -45,22 +45,22 @@ class VariantOptions(BaseModel):
     option_name = models.CharField(max_length=100)
     
     def __str__(self):
-        return self.option_name
+        return self.variant_name + " " + self.option_name
 
 class ProductVariant(BaseModel):
-    Product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='product_variants')
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='product_variants')
     variant_option = models.ManyToManyField(VariantOptions)
 
-    def __str__(self):
-        return self.variant_option
+    # def __str__(self):
+    #     return f"{self.variant_option.ProductVariant}"
 
 class ProductImages(BaseModel):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='product_images')
     image = models.ImageField(upload_to='product/images/')
 
 class VendorProducts(BaseModel):
-    shopkeeper = models.ForeignKey(Shopkeeper, on_delete=models.CASCADE)
-    product = models.ForeignKey(Product, on_delete= models.CASCADE)
+    shopkeeper = models.ForeignKey(Shopkeeper, on_delete=models.CASCADE, related_name="shopkeeper_products")
+    product = models.ForeignKey(Product, on_delete= models.CASCADE, related_name='products')
     vendor_selling_price = models.FloatField()
     dealer_price = models.FloatField()
     is_active = models.BooleanField(default=True)

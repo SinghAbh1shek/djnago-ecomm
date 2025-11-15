@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'home',
     'accounts',
     'products',
+    'django_extensions',
 ]
 
 MIDDLEWARE = [
@@ -138,3 +139,10 @@ MEDIA_URL = '/media/'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+
+GRAPH_MODELS = {
+    'all_applications': True,
+    'graph_models': True,
+}

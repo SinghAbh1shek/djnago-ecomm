@@ -1,0 +1,151 @@
+{% extends "utils/base.html" %}
+
+{% block title %}Product Details{% endblock title %}
+{% block start %}
+
+<hr id="hr">
+<div class = "container">
+  <div class="row">
+    <div class="col-md-5">
+      <img src="/media/{{product.product.getFirstImage}}" class="img-fluid p-5" style="height: 500px;" >
+    </div>
+    <div class="col-md-7">
+      <h4 class="pt-5">{{product.product.item_name}}</h4>
+      <p>{{product.product.category.name}}</p>
+      <div class="rating">
+      <span class="text-warning"><i class="fas fa-star"></i></span>
+      <span class="text-warning"><i class="fas fa-star"></i></span>
+      <span class="text-warning"><i class="fas fa-star"></i></span>
+    </div>
+    <h4 class="pt-4 pb-3">₹{{product.vendor_selling_price}}</h4>
+    <p class="text-muted">{{product.product.product_descriptions}}</p>
+    <table class="table table-borderless">
+ 
+  <tbody>
+    <tr>
+      <th scope="row">Brand</th>
+      
+      <td>{{product.product.brand.name}}</td>
+    </tr>
+    <tr>
+      <th scope="row">SKU</th>
+    
+      <td>{{product.product.product_sku}}</td>
+    </tr>
+    <tr>
+      <th scope="row">HSN</th>
+     
+      <td>{{product.product.hsn_code}}</td>
+    </tr>
+  </tbody>
+</table>
+<hr>
+<div class="row pt-3">
+  <div class="col-md-3">
+    <div class="input-group mb-3">
+  <div class="input-group-prepend">
+    <span class="input-group-text"><i class="fas fa-plus"></i></span>
+  </div>
+  <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)">
+  <div class="input-group-append">
+    <span class="input-group-text"><i class="fas fa-minus"></i></span>
+  </div>
+</div>
+  </div>
+  <div class="col-md-7">
+    <div class="form-check form-check-inline">
+  <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1">
+  <label class="form-check-label" for="inlineCheckbox1">Small</label>
+</div>
+<div class="form-check form-check-inline">
+  <input class="form-check-input" type="checkbox" id="inlineCheckbox2" value="option2">
+  <label class="form-check-label" for="inlineCheckbox2">medium</label>
+</div>
+<div class="form-check form-check-inline">
+  <input class="form-check-input" type="checkbox" id="inlineCheckbox3" value="option3">
+  <label class="form-check-label" for="inlineCheckbox3">Large</label>
+</div>
+  </div>
+</div>
+<h5>Select Product Variants</h5>
+{% for variant, option in product_variants.items %}
+<div>
+  <label>
+    <input type="checkbox" name="selected_variants" value="{{variant}}"
+    {% if variant == product.product.product_sku %}
+    checked
+    disabled
+    {% endif %}
+    onclick = "updateUrl('{{variant}}')">
+    {{option}}
+  </label>
+</div>
+
+
+{% endfor %}
+
+
+
+</div>  
+</div>
+
+
+
+<ul class="nav nav-tabs mytabs" id="myTab" role="tablist">
+  <li class="nav-item">
+    <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Description</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Information</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Review</a>
+  </li>
+</ul>
+<div class="tab-content" id="myTabContent">
+  <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+    <div class="wrap-text mt-5">
+      <h5>Product Descrption</h5>
+      <p>{{product.product.sub_category}}</p>
+      <div class="rating">
+      <span class="text-warning"><i class="fas fa-star"></i></span>
+      <span class="text-warning"><i class="fas fa-star"></i></span>
+      <span class="text-warning"><i class="fas fa-star"></i></span>
+    </div>
+    <h4 class="pt-4 pb-3">₹{{product.vendor_selling_price}}</h4>
+<p class="text-muted text-justify">{{product.product.product_descriptions}}</p>
+
+    </div>
+
+
+
+
+  </div>
+  <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">...</div>
+  <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">...</div>
+</div>
+</div>
+
+
+<script>
+  window.onload = function(){
+    window.scrollTo({
+      top:200,
+      behavior: 'smooth'
+    })
+  }
+  function updateUrl(sku){
+    const currentUrl = new URL(window.location.href)
+    currentUrl.searchParams.set('product_sku', sku)
+    window.location.href = currentUrl.href
+  }
+
+</script>
+
+{% include "utils/footer.html" %} 
+{% include "utils/login_modal.html" %} 
+
+{% endblock start %}
+
+
+

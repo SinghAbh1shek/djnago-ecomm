@@ -5,6 +5,10 @@ from django.contrib.auth.models import User
 class Customer(User):
     profile_image = models.ImageField(upload_to='customer/', null=True, blank=True)
 
+    def getCartItemsCount(self):
+        from orders.models import CartItems
+        return CartItems.objects.filter(cart__customer = self, cart__is_paid = False).count()
+
     class Meta:
         db_table = "Customer"
     

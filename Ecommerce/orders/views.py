@@ -7,6 +7,15 @@ from django.contrib import messages
 from accounts.models import Customer
 
 @login_required(login_url="/accounts/login/")
+def get_cart(request):
+    cart = None
+    try:
+        cart = Cart.objects.get(customer = request.user.customer)
+    except Exception as e:
+        print(e)
+    return render(request, 'cart.html', context={'cart': cart})
+
+@login_required(login_url="/accounts/login/")
 def add_to_cart(request):
     try:
         customer = Customer.objects.get(user_ptr=request.user.id)
@@ -34,12 +43,16 @@ def remove_to_cart(request):
         customer = Customer.objects.get(user_ptr=request.user.id)
 
         product = request.GET.get('product_id')
+        quantity = request.GET.get('quantity')
         
         cart, _ = Cart.objects.get_or_create(customer = customer, is_paid = False)
         cart_items= CartItems.objects.filter(cart=cart, product=VendorProducts.objects.get(id = product))
         if cart_items.exists():
             cart_items = cart_items[0]
-            cart_items.quantity -= 1
+            if quantity:
+                cart_items.quantity = int(quantity)
+            else:
+                cart_items.quantity -= 1
 
             if cart_items.quantity <=0:
                 cart_items.delete()

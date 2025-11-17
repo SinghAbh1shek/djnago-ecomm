@@ -23,11 +23,12 @@
 
 
 			<div class = "col-md-3 mt-3">
+				<a href="{% url 'get_cart' %}" class="m-0">
 				<div class = "circle float-right">
 						<i class="fas fa-shopping-cart text-muted"></i>
 						<span class="badge badge-danger">{{request.user.customer.getCartItemsCount}}</span>
 				
-				</div>
+				</div> </a>
 
 				{% if not request.user.is_authenticated %}
 				

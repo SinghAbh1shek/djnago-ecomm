@@ -104,7 +104,8 @@
               <div>Total</div>
               <div><strong>{{cart.getCartTotal}}</strong></div>
             </div>
-            <button class="btn btn-primary w-100 mt-4">Checkout</button>
+            {% comment %} <button class="btn btn-primary w-100 mt-4">Checkout</button> {% endcomment %}
+            <button id="rzp-button1" class="btn btn-primary w-100 mt-4">Checkout</button>
           </div>
         </div>
       </div>
@@ -126,4 +127,33 @@
 
 {% include "utils/footer.html" %} 
 {% include "utils/login_modal.html" %} 
+
+
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+var options = {
+    "key": "rzp_test_4RKwlkNfJjTj0H",
+    "amount": "{{cart.getCartTotal}}",
+    "currency": "INR",
+    "name": "Ecommerce",
+    "description": "Paying for cart",
+    "image": "https://example.com/your_logo",
+    "order_id": "{{payment_info.id}}",
+    "callback_url": "http://localhost:8000/order/success/?order_id={{payment_info.id}}",
+    "theme": {
+        "color": "#3399cc"
+    },
+    {% comment %} "handler": function (response){
+        alert(response.razorpay_payment_id);
+        alert(response.razorpay_order_id);
+        alert(response.razorpay_signature)
+    }, {% endcomment %}
+};
+var rzp1 = new Razorpay(options);
+document.getElementById('rzp-button1').onclick = function(e){
+    rzp1.open();
+    e.preventDefault();
+}
+</script>
 {% endblock start %}

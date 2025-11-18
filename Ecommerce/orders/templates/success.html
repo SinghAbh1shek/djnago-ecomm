@@ -1,0 +1,23 @@
+{% extends "utils/base.html" %}
+{% block title %}Order Success{% endblock title %}
+{% block start %}
+{% load cart_extras %}
+
+
+ <div class="container py-3 text-center">
+    <h3>You payment is success thanks for purchasing the product</h3>
+    <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Dolore nulla nam architecto sit possimus, cupiditate id, expedita provident accusantium magnam, numquam unde eligendi consequatur facere aut voluptatem saepe distinctio iusto et praesentium sint? Tenetur odio quaerat quia illum vel voluptas repellendus mollitia, delectus consequuntur sint ab, sapiente quae itaque reprehenderit?</p>
+    
+    <img height="300" src="https://www.soroptimistindianrock.org/wp-content/uploads/2021/01/PAYMENT-SUCCESS.png" alt="Success">
+
+</div>
+
+
+
+
+{% include "utils/footer.html" %} 
+{% include "utils/login_modal.html" %} 
+
+
+
+{% endblock start %}

@@ -1,19 +1,30 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from .models import Cart, CartItems
 from products.models import VendorProducts
 from django.contrib import messages
 from accounts.models import Customer
+from .payments import RazorPayPayment
+from django.views.decorators.csrf import csrf_exempt
 
 @login_required(login_url="/accounts/login/")
 def get_cart(request):
     cart = None
+    payment_info = {}
     try:
         cart = Cart.objects.get(customer = request.user.customer)
+        amount = cart.getCartTotal()
+        receipt = cart.customer.username
+        payment = RazorPayPayment('INR')
+        payment_info = payment.processPayment(amount*100, receipt)
+        cart.order_id = payment_info['id']
+        cart.save()
+        print(payment_info)
+
     except Exception as e:
         print(e)
-    return render(request, 'cart.html', context={'cart': cart})
+    return render(request, 'cart.html', context={'cart': cart, 'payment_info': payment_info})
 
 @login_required(login_url="/accounts/login/")
 def add_to_cart(request):
@@ -65,3 +76,24 @@ def remove_to_cart(request):
     except Exception as e:
         messages.error(request, "Invalid Product  ID")
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+@csrf_exempt
+@login_required(login_url="/accounts/login/")
+def payment_success(request):
+    print(request.POST)
+    try:
+        razorpay_payment_id = request.POST.get('razorpay_payment_id')
+        razorpay_order_id = request.POST.get('razorpay_order_id')
+        razorpay_signature = request.POST.get('razorpay_signature')
+
+        print(razorpay_order_id)
+        cart = Cart.objects.get(order_id = razorpay_order_id)
+        cart.payment_id = razorpay_payment_id
+        cart.signature = razorpay_signature
+        cart.is_paid = True
+        cart.save()
+
+        return render(request, 'success.html')
+    except Exception as e:
+        print(e)
+        return redirect('/')

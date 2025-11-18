@@ -189,3 +189,29 @@ def uploadImages(path):
 # uploadImages('C:\\Users\\abhi0\\OneDrive\\Desktop\\Django ecomm\\Ecommerce\\images')
 
 # createVendorProducts()
+
+
+
+
+
+
+import razorpay
+from django.conf import settings
+
+class RazorPayPayment:
+    def __init__(self, currency='INR'):
+        self.currency = currency
+        self.client = razorpay.Client(auth=(settings.RAZORPAY_KEY, settings.RAZORPAY_SECRET))
+
+    def processPayment(self, amount, receipt):
+        payement = self.client.order.create({
+            "amount": amount,
+            "currency": self.currency,
+            "receipt": receipt,
+            "partial_payment": False,
+            "notes": {}
+        })
+        print(payement)
+
+# payment = RazorPayPayment()
+# payment.processPayment(225, "Mai hu")

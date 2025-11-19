@@ -143,7 +143,13 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 
-GRAPH_MODELS = {
-    'all_applications': True,
-    'graph_models': True,
-}
+# GRAPH_MODELS = {
+#     'all_applications': True,
+#     'graph_models': True,
+# }
+
+from dotenv import load_dotenv
+load_dotenv()
+
+RAZORPAY_KEY = os.getenv('RAZORPAY_KEY')
+RAZORPAY_SECRET = os.getenv('RAZORPAY_SECRET')

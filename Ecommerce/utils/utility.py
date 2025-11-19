@@ -9,4 +9,4 @@ def generateOrderId(index):
 
     return f"{year}{month}{day}{time}{index.zfill(5)}"
 
-print(generateOrderId('3'))
+# print(generateOrderId('3'))

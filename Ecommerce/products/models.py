@@ -39,6 +39,12 @@ class Product(BaseModel):
         if self.product_images.first():
             return self.product_images.first().image
         return 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSGZjYKPjVrCS_uKmuUXIkYNXPA3x0q_Y-hYQ&s'
+    
+    def getFirstImageForPdf(self):
+        if self.product_images.first():
+            return f"http://127.0.0.1:8000/media/{self.product_images.first().image}"
+        return 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSGZjYKPjVrCS_uKmuUXIkYNXPA3x0q_Y-hYQ&s'
+
 
 class VariantOptions(BaseModel):
     variant_name = models.CharField(max_length=100)

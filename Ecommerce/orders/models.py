@@ -2,7 +2,7 @@ from django.db import models
 from accounts.models import Customer
 from products.models import VendorProducts
 from django.db.models import Sum, F
-from utils.utility import generateOrderId
+from utils.utility import generateOrderId, getImageBase64, generateOrderPdf
 
 
 # Create your models here.
@@ -42,7 +42,7 @@ class Cart(models.Model):
                     quantity = cart_item.quantity,
                     price = cart_item.product.vendor_selling_price * cart_item.quantity
                 )
-    
+            generateOrderPdf(order, order.getOrderData())
 
 class CartItems(models.Model):
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name='cart_items')
@@ -62,14 +62,40 @@ class Order(models.Model):
     total = models.FloatField()
     
     def save(self, *args, **kwargs):
-        self.order_id = generateOrderId(str(Order.objects.count()+1))
+        if self.pk is None:
+            self.order_id = generateOrderId(str(Order.objects.count()+1))
         super(Order, self).save(*args, **kwargs)
+
+    def getOrderData(self):
+        data = {
+            "customer": {
+                "name": self.customer.first_name,
+                'phone_number': self.customer.username,
+            },
+            "order": {
+                "order_id": self.order_id,
+                'total': self.total,
+            },
+            "order_items": []
+        }
+        order_items = [
+            {
+                'product': item.product.product.item_name,
+                'image': getImageBase64(item.product.product.getFirstImageForPdf()),
+                'quantity': item.quantity,
+                'price': item.price/item.quantity,
+                'total_price': item.price
+            }
+            for item in self.order_items.all()
+        ]
+        data['order_items'] = order_items
+        return data
 
     def __str__(self):
         return self.order_id
 
 class OrderItems(models.Model):
-    order = models.ForeignKey(Order, on_delete=models.CASCADE)
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='order_items')
     product = models.ForeignKey(VendorProducts, on_delete=models.SET_NULL, null= True)
     quantity = models.IntegerField(default=0)
     price = models.FloatField()
